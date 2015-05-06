@@ -1,16 +1,22 @@
 package com.example.lukaszpp.hearingtest;
 
+import android.content.Intent;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.media.MediaRecorder;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import java.io.IOException;
 
 
 public class hearingTest extends ActionBarActivity {
@@ -29,11 +35,14 @@ public class hearingTest extends ActionBarActivity {
 
     Handler handler = new Handler();
 
+    //media recorder
+    private MediaRecorder myAudioRecorder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hearing_test);
-
+        
         //pierwszy seek bar
         SeekBar seekBarObject = (SeekBar) findViewById(R.id.seekBar);
         seekBarObject.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -49,11 +58,11 @@ public class hearingTest extends ActionBarActivity {
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
-                // TODO niepotzebne?
+
             }
 
             public void onStopTrackingTouch(SeekBar seekBar) {
-               // TODO niepotrzebne?
+
             }
         });
 
@@ -71,11 +80,11 @@ public class hearingTest extends ActionBarActivity {
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
-                // TODO niepotzebne?
+
             }
 
             public void onStopTrackingTouch(SeekBar seekBar) {
-                // TODO niepotrzebne?
+
             }
         });
     }
@@ -88,25 +97,7 @@ public class hearingTest extends ActionBarActivity {
         return true;
     }
 
-    /*
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-        // Use a new tread as this can take a while
-        final Thread thread = new Thread(new Runnable() {
-            public void run() {
-                genTone();
-                handler.post(new Runnable() {
-
-                    public void run() {
-                        playSound();
-                    }
-                });
-            }
-        });
-        thread.start();
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -148,31 +139,7 @@ public class hearingTest extends ActionBarActivity {
                 currentFreq = currentFreq + 1;
             }
         }
-/*
-        //obliczanie skoku - co ile probek skok frequency
-        //this.iloscProbek
-        double jump = this.iloscProbek / freqDist;
 
-        //ustalenie wartosci min i max dla danego herca
-        double currentMin = this.minFreq;
-        double currentMax = this.minFreq + jump;
-        //petla dla kazdego Hz
-        while(currentMin < this.maxFreq) {
-
-            //petla dla kazdej probki danego Hz
-            double i = 0;
-            while(i < jump){
-                int j = ((int) currentMin) + ((int) i);
-                sample[j] = Math.sin(2 * Math.PI * i /(this.probkowanie/currentFreq));
-                i = i +1;
-            }
-
-            //podniesienie countera probki do nastepnego herza
-            currentFreq = currentFreq + 1;
-            currentMin = currentMax;
-            currentMax = currentMax + jump;
-        }
-*/
         //wariacki bufor
         int idx = 0;
         for (final double dVal : sample) {
@@ -193,33 +160,63 @@ public class hearingTest extends ActionBarActivity {
         audioTrack.play();
 
     }
-/*
-    void genTone(int no){
-        // fill out the array
-        for (int i = 0; i < numSamples; ++i) {
-            sample[i] = Math.sin(2 * Math.PI * i / (sampleRate/freqOfTone));
+
+    //rozpoczęcie nagrywania
+    public void startRecord(View view){
+        try {
+
+            //rekorder audio
+            myAudioRecorder = new MediaRecorder();
+            myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+            myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+            //myAudioRecorder.setOutputFile(outputFile);
+
+            //plik
+            Long tsLong = System.currentTimeMillis()/1000;
+            String filename = Environment.getExternalStorageDirectory().
+                    getAbsolutePath() + "/" + tsLong.toString() + ".3gp";
+
+            //start
+            myAudioRecorder.setOutputFile(filename);
+            myAudioRecorder.prepare();
+            myAudioRecorder.start();
+
+            //start chronometer
+            TextView textViewObject = (TextView) findViewById(R.id.textView3);
+            textViewObject.setText("Nagrywanie");
+
+        } catch (IllegalStateException e) {
+
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
         }
 
-        // convert to 16 bit pcm sound array
-        // assumes the sample buffer is normalised.
-        int idx = 0;
-        for (final double dVal : sample) {
-            // scale to maximum amplitude
-            final short val = (short) ((dVal * 32767));
-            // in 16 bit wav PCM, first byte is the low order byte
-            generatedSnd[idx++] = (byte) (val & 0x00ff);
-            generatedSnd[idx++] = (byte) ((val & 0xff00) >>> 8);
 
-        }
     }
 
-    void playSound(){
-        final AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
-                sampleRate, AudioFormat.CHANNEL_OUT_MONO,
-                AudioFormat.ENCODING_PCM_16BIT, generatedSnd.length,
-                AudioTrack.MODE_STATIC);
-        audioTrack.write(generatedSnd, 0, generatedSnd.length);
-        audioTrack.play();
+    //zatrzymanie nagrywania i zapisanie pliku
+    public void stopRecord(View view){
+
+        //zatrzymaj audio
+        myAudioRecorder.stop();
+        myAudioRecorder.reset();
+        myAudioRecorder.release();
+        myAudioRecorder  = null;
+
+        //zatrzymaj chronometr
+        TextView textViewObject = (TextView) findViewById(R.id.textView3);
+        textViewObject.setText("Nagrywanie Stop");
     }
-*/
+
+    //otwórz nagrania
+    public void otworzNagrania(View view){
+        //create intent
+        Intent intent = new Intent(this, nagrania.class);
+
+        //wystartowanie aktywnosci
+        startActivity(intent);
+    }
 }

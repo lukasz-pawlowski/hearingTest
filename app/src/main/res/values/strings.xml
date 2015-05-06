@@ -3,4 +3,10 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="play">Graj</string>
+    <string name="record">Nagrywaj</string>
+    <string name="stop">Zatrzymaj nagrywanie</string>
+    <string name="openFiles">Otwórz Nagrania</string>
+    <string name="title_activity_otworz_nagrania">otworzNagrania</string>
+    <string name="title_activity_nagrania">nagrania</string>
 </resources>

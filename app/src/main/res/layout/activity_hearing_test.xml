@@ -33,7 +33,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="0"
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -42,7 +42,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="44000"
         android:id="@+id/textView2"
         android:layout_below="@+id/seekBar"
         android:layout_alignParentLeft="true"
@@ -51,21 +51,50 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="@string/play"
         android:id="@+id/button"
         android:onClick="startTest"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/record"
+        android:id="@+id/button2"
+        android:onClick="startRecord"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stop"
+        android:id="@+id/button3"
+        android:onClick="stopRecord"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/seekBar2"
+        android:layout_alignEnd="@+id/seekBar2" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
+        android:text=""
         android:id="@+id/textView3"
-        android:layout_below="@+id/seekBar2"
+        android:layout_above="@+id/button2"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/openFiles"
+        android:id="@+id/button4"
+        android:onClick="otworzNagrania"
+        android:layout_above="@+id/button3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
