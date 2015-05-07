@@ -168,14 +168,14 @@ public class hearingTest extends ActionBarActivity {
             //rekorder audio
             myAudioRecorder = new MediaRecorder();
             myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-            myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-            myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+            myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.MPEG_4);
             //myAudioRecorder.setOutputFile(outputFile);
 
             //plik
             Long tsLong = System.currentTimeMillis()/1000;
             String filename = Environment.getExternalStorageDirectory().
-                    getAbsolutePath() + "/" + tsLong.toString() + ".3gp";
+                    getAbsolutePath() + "/" + tsLong.toString() + ".mpg4";
 
             //start
             myAudioRecorder.setOutputFile(filename);

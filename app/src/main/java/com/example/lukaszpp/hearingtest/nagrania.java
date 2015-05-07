@@ -1,13 +1,22 @@
 package com.example.lukaszpp.hearingtest;
 
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class nagrania extends ActionBarActivity {
@@ -18,14 +27,27 @@ public class nagrania extends ActionBarActivity {
         setContentView(R.layout.activity_nagrania);
 
         TextView textViewObject = (TextView) findViewById(R.id.listaplikow);
-        textViewObject.setText("");
+        textViewObject.setText("Wybierz nagranie");
+
+        //spinner
+        Spinner spinnerObject = (Spinner) findViewById(R.id.spinner);
+
+        List<String> list = new ArrayList<String>();
+
+
+
         File dirFiles = Environment.getExternalStorageDirectory();
         for (String strFile : dirFiles.list()) {
             //wez nazwe pliku
-
-            textViewObject.append(strFile + "\n");
+            list.add(strFile);
+            //textViewObject.append(strFile + "\n");
 
         }
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerObject.setAdapter(dataAdapter);
     }
 
 
@@ -49,5 +71,35 @@ public class nagrania extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void playRecording(View view){
+
+        //wez dane ze spinner
+        Spinner spinnerObject = (Spinner) findViewById(R.id.spinner);
+        TextView textViewObject = (TextView) findViewById(R.id.listaplikow);
+
+        //ścieżka do pliku
+        String file = String.valueOf(spinnerObject.getSelectedItem());
+        String path =  Environment.getExternalStorageDirectory().
+                getAbsolutePath() + "/"  + file;
+
+        textViewObject.setText(path);
+
+        Uri uri = Uri.parse(path);
+        //graj plik
+
+
+
+        try {
+            MediaPlayer mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setDataSource(getApplicationContext(), uri);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        }catch(IOException e) {
+
+        }
+
     }
 }
