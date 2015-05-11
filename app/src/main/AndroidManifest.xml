@@ -21,14 +21,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".otworzNagrania"
-            android:label="@string/title_activity_otworz_nagrania"
-            android:parentActivityName=".hearingTest" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.lukaszpp.hearingtest.hearingTest" />
-        </activity>
-        <activity
             android:name=".nagrania"
             android:label="@string/title_activity_nagrania"
             android:parentActivityName=".hearingTest" >
